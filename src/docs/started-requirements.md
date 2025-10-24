@@ -887,6 +887,95 @@ validation = schema_validator.validate_qb_offer_filter(filter_data)
 
 ---
 
+
+## 🔗 Endpoint: Consulta de Dados de Pedido e Usuário (Anubis Subscription Payload)
+
+### Descrição
+Novo endpoint REST em quero_bolsa para integração do payload de assinatura do Anubis. Permite consultar dados completos de um pedido e seu usuário associado, conforme contrato de integração.
+
+**Rota:**
+`GET /api/qb/v1/orders/:order_id/user_data`
+
+
+<details>
+<summary><strong>Exemplo de Retorno JSON</strong></summary>
+
+```json
+{
+  "order": {
+    "id": 123,
+    "created_at": "2025-10-24T12:34:56Z",
+    "updated_at": "2025-10-24T12:35:00Z",
+    "checkout_step": "completed",
+    "price": 199.90,
+    "user": {
+      "id": 456,
+      "cpf": "123.456.789-00",
+      "email": "aluno@exemplo.com",
+      "phone_number": "+55 11 91234-5678",
+      "gender": "M",
+      "birth_date": "2000-01-01",
+      "full_name": "Aluno Exemplo",
+      "rg": "12.345.678-9",
+      "last_enem_score": 750,
+      "last_enem_year": 2024,
+      "address": {
+        "zipcode": "01234-567",
+        "address": "Rua Exemplo",
+        "address_number": "123",
+        "neighborhood": "Centro",
+        "city": "São Paulo",
+        "state": "SP"
+      }
+    }
+  }
+}
+```
+</details>
+
+**Tratamento de Erros:**
+- Pedido não encontrado: HTTP 404
+- Usuário ausente: campo `user` retorna `null`
+- Endereço ausente: campo `address` retorna `null`
+
+
+<details>
+<summary><strong>Diagrama de Sequência (Mermaid)</strong></summary>
+
+```mermaid
+%%{init: {
+  'theme':'base',
+  'themeVariables': {
+    'primaryColor':'#E8F4FD',
+    'primaryBorderColor':'#4A90E2',
+    'primaryTextColor':'#2C3E50',
+    'secondaryColor':'#F0F8E8',
+    'tertiaryColor':'#FDF2E8',
+    'quaternaryColor':'#F8E8F8',
+    'lineColor':'#5D6D7E',
+    'fontFamily':'Inter,Segoe UI,Arial'
+  }
+}}%%
+sequenceDiagram
+    participant Client as 🧑‍💻 Cliente
+    participant API as 🌐 QueroBolsa API
+    participant OrdersController as 🎯 OrdersController
+    participant OrderModel as 📦 Order
+    participant UserModel as 👤 User
+    participant Serializer as 🧩 OrderUserSerializer
+
+    Client->>API: GET /api/qb/v1/orders/:order_id/user_data
+    API->>OrdersController: encaminha requisição
+    OrdersController->>OrderModel: busca pedido (Order.includes(:user))
+    OrderModel->>UserModel: carrega usuário associado
+    OrdersController->>Serializer: serializa pedido e usuário
+    Serializer->>API: retorna JSON
+    API->>Client: responde com dados do pedido e usuário
+```
+</details>
+
+---
+
 ## 📚 Referências
 
 Esta seção contém links para documentações técnicas detalhadas e guias de implementação relacionados ao projeto Anubis:
