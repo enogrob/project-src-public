@@ -891,7 +891,12 @@ validation = schema_validator.validate_qb_offer_filter(filter_data)
 ## 🔗 Endpoint: Consulta de Dados de Pedido e Usuário (Anubis Subscription Payload)
 
 ### Descrição
-Novo endpoint REST em quero_bolsa para integração do payload de assinatura do Anubis. Permite consultar dados completos de um pedido e seu usuário associado, conforme contrato de integração.
+Novo endpoint REST implementado no microserviço **quero_bolsa** (código-fonte em `quero_bolsa`) para integração do payload de assinatura do Anubis. Permite consultar dados completos de um pedido e seu usuário associado, conforme contrato de integração.
+
+**Localização da implementação:**
+- Controller: `quero_bolsa/app/controllers/api/qb/v1/orders_controller.rb`
+- Serializer: `quero_bolsa/app/serializers/order_user_serializer.rb`
+- Request specs: `src/quero_bolsa/spec/requests/api/qb/v1/orders_spec.rb`
 
 **Rota:**
 `GET /api/qb/v1/orders/:order_id/user_data`
