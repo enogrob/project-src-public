@@ -1,89 +1,3 @@
-## Como Executar os Testes
-
-Para rodar os testes de requisição do endpoint, siga os passos abaixo:
-
-1. Abra o terminal na raiz do projeto.
-2. Navegue até o diretório do microserviço:
-  ```bash
-  cd src/quero_bolsa
-  ```
-3. Execute os testes de request specs com RSpec:
-  ```bash
-  DISABLE_SPRING=1 RAILS_ENV=test bundle exec rspec spec/requests/api/qb/v1/orders_spec.rb
-  ```
-
-> Para rodar todos os testes do microserviço:
-> ```bash
-> bundle exec rspec
-> ```
-
-Certifique-se de que as dependências estejam instaladas (use `bundle install` se necessário) e que o banco de dados de teste esteja migrado e populado conforme os factories.
-# Especificação de Testes: Endpoint Consulta de Dados de Pedido e Usuário (Anubis Subscription Payload)
-
-## Contexto
-
-Os testes para o endpoint de consulta de dados de pedido e usuário, implementado no microserviço **quero_bolsa** (`src/quero_bolsa`), garantem o correto funcionamento da rota de integração do payload de assinatura do Anubis.
-
-- **Rota testada:** `GET /api/qb/v1/orders/:order_id/user_data`
-- **Localização dos testes:** `src/quero_bolsa/spec/requests/api/qb/v1/orders_spec.rb`
-
-## Objetivos dos Testes
-
-- Validar o retorno correto dos dados do pedido e usuário conforme o contrato JSON documentado
-- Garantir o tratamento de erros (pedido não encontrado, usuário ausente, endereço ausente)
-- Cobrir cenários de sucesso e falha
-
-## Cenários Cobertos
-
-### 1. Sucesso
-- Pedido e usuário existem
-- Retorno JSON conforme especificação
-
-### 2. Pedido não encontrado
-- Retorno HTTP 404
-- Mensagem de erro adequada
-
-### 3. Usuário ausente
-- Campo `user` retorna `null` no JSON
-
-### 4. Endereço ausente
-- Campo `address` retorna `null` no JSON
-
-## Estrutura dos Testes
-
-Os testes utilizam RSpec para requisições HTTP e validação do corpo da resposta. Exemplos de matchers utilizados:
-
-```ruby
-expect(response).to have_http_status(:ok)
-expect(json_body["order"]).to include("id", "user")
-expect(json_body["order"]["user"]).to include("cpf", "email", ...)
-```
-
-## Exemplo de Teste de Sucesso
-
-```ruby
-describe 'GET /api/qb/v1/orders/:order_id/user_data' do
-  context 'quando o pedido e usuário existem' do
-    it 'retorna os dados completos conforme contrato' do
-      get "/api/qb/v1/orders/#{order.id}/user_data"
-      expect(response).to have_http_status(:ok)
-      expect(json_body["order"]["id"]).to eq(order.id)
-      expect(json_body["order"]["user"]["cpf"]).to eq(user.cpf)
-      # ... demais campos
-    end
-  end
-end
-```
-
-## Observações
-
-- Os testes cobrem todos os cenários relevantes para o endpoint
-- A estrutura dos arquivos e pastas segue o padrão do projeto
-- Para cenários adicionais, basta estender o arquivo de specs
-
----
-
-> Para detalhes sobre o contrato e exemplos de resposta, consulte o capítulo correspondente em `started-requirements.md`.
 # 🧪 Anubis Testing Specification Document
 
 ## 📋 **Overview**
@@ -567,3 +481,86 @@ Este documento fornece comandos exatos e especificações completas para validar
 - 📊 **Qualidade**: RuboCop + Brakeman compliance
 
 Para executar todos os testes, use o script sequencial fornecido na seção 8.
+
+# Especificação de Testes: Endpoint Consulta de Dados de Pedido e Usuário (Anubis Subscription Payload)
+
+## Contexto
+
+Os testes para o endpoint de consulta de dados de pedido e usuário, implementado no microserviço **quero_bolsa** (`src/quero_bolsa`), garantem o correto funcionamento da rota de integração do payload de assinatura do Anubis.
+
+- **Rota testada:** `GET /api/qb/v1/orders/:order_id/user_data`
+- **Localização dos testes:** `src/quero_bolsa/spec/requests/api/qb/v1/orders_spec.rb`
+
+## Objetivos dos Testes
+
+- Validar o retorno correto dos dados do pedido e usuário conforme o contrato JSON documentado
+- Garantir o tratamento de erros (pedido não encontrado, usuário ausente, endereço ausente)
+- Cobrir cenários de sucesso e falha
+
+## Cenários Cobertos
+
+### 1. Sucesso
+- Pedido e usuário existem
+- Retorno JSON conforme especificação
+
+### 2. Pedido não encontrado
+- Retorno HTTP 404
+- Mensagem de erro adequada
+
+### 3. Usuário ausente
+- Campo `user` retorna `null` no JSON
+
+### 4. Endereço ausente
+- Campo `address` retorna `null` no JSON
+
+## Estrutura dos Testes
+
+Os testes utilizam RSpec para requisições HTTP e validação do corpo da resposta. Exemplos de matchers utilizados:
+
+```ruby
+expect(response).to have_http_status(:ok)
+expect(json_body["order"]).to include("id", "user")
+expect(json_body["order"]["user"]).to include("cpf", "email", ...)
+```
+
+## Exemplo de Teste de Sucesso
+
+```ruby
+describe 'GET /api/qb/v1/orders/:order_id/user_data' do
+  context 'quando o pedido e usuário existem' do
+    it 'retorna os dados completos conforme contrato' do
+      get "/api/qb/v1/orders/#{order.id}/user_data"
+      expect(response).to have_http_status(:ok)
+      expect(json_body["order"]["id"]).to eq(order.id)
+      expect(json_body["order"]["user"]["cpf"]).to eq(user.cpf)
+      # ... demais campos
+    end
+  end
+end
+```
+
+## Observações
+
+- Os testes cobrem todos os cenários relevantes para o endpoint
+- A estrutura dos arquivos e pastas segue o padrão do projeto
+- Para cenários adicionais, basta estender o arquivo de specs
+
+---
+
+## Como Executar os Testes
+
+Para rodar os testes de requisição do endpoint, siga os passos abaixo:
+
+1. Abra o terminal na raiz do projeto.
+2. Navegue até o diretório do microserviço:
+  ```bash
+  cd quero_bolsa
+  ```
+3. Execute os testes de request specs com RSpec:
+  ```bash
+  DISABLE_SPRING=1 RAILS_ENV=test bundle exec rspec spec/requests/api/qb/v1/orders_spec.rb
+  ```
+
+Certifique-se de que as dependências estejam instaladas (use `bundle install` se necessário) e que o banco de dados de teste esteja migrado e populado conforme os factories.
+
+> Para detalhes sobre o contrato e exemplos de resposta, consulte o capítulo correspondente em `started-requirements.md`.
