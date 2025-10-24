@@ -1,0 +1,233 @@
+/* CSS for PDF Export - Optimized for Mermaid Diagrams */
+
+/* Page setup for better diagram fitting */
+@page {
+  size: A4;
+  margin: 1cm 0.5cm 0.8cm 0.5cm;
+}
+
+/* Mermaid diagram containers - More aggressive sizing */
+.mermaid {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  page-break-inside: avoid;
+  page-break-before: auto;
+  page-break-after: auto;
+  margin: 5px 0;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Auto-scaling based on content size */
+.mermaid::after {
+  content: "";
+  display: block;
+  height: 0;
+}
+
+/* Force all diagrams to fit page width with more aggressive scaling */
+.mermaid svg {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+  transform-origin: top center;
+  transform: scale(0.7);
+  max-height: 85vh;
+}
+
+/* Large diagrams that need their own page with more aggressive scaling */
+.mermaid.large-diagram {
+  page-break-before: always;
+  page-break-after: always;
+  margin: 0;
+  padding: 0;
+}
+
+.mermaid.large-diagram svg {
+  transform: scale(0.7) !important;
+  max-height: 95vh;
+}
+
+/* Wide diagrams - extra compression */
+.mermaid.wide-diagram svg {
+  transform: scale(0.6) !important;
+}
+
+/* ER Diagrams - specific optimizations */
+.mermaid svg g.entityBox {
+  font-size: 9px !important;
+}
+
+.mermaid svg g.entityBox text {
+  font-size: 8px !important;
+}
+
+/* Flowchart optimizations */
+.mermaid svg .node rect,
+.mermaid svg .node circle,
+.mermaid svg .node ellipse,
+.mermaid svg .node polygon {
+  font-size: 10px !important;
+}
+
+.mermaid svg .edgeLabel {
+  font-size: 9px !important;
+}
+
+/* Prevent text overflow in all diagrams */
+.mermaid text {
+  font-size: 8px !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Specific diagram type scaling */
+.mermaid svg g.classGroup text {
+  font-size: 7px !important;
+}
+
+.mermaid svg .titleText {
+  font-size: 10px !important;
+}
+
+/* Ultra-aggressive scaling for the largest diagrams */
+.mermaid svg[height*="600"],
+.mermaid svg[height*="700"],
+.mermaid svg[height*="800"] {
+  transform: scale(0.4) !important;
+  max-height: 75vh !important;
+}
+
+/* Detect and scale very wide diagrams */
+.mermaid svg[width*="800"],
+.mermaid svg[width*="900"],
+.mermaid svg[width*="1000"] {
+  transform: scale(0.45) !important;
+}
+
+/* Scale diagrams with many elements (complex flowcharts/ER diagrams) */
+.mermaid svg g:nth-child(n+15) {
+  font-size: 7px !important;
+}
+
+/* Code blocks */
+pre {
+  page-break-inside: avoid;
+  font-size: 9px;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+
+/* Tables */
+table {
+  page-break-inside: avoid;
+  font-size: 10px;
+  width: 100%;
+}
+
+/* Headers and sections */
+h1, h2, h3, h4, h5, h6 {
+  page-break-after: avoid;
+  color: #2C3E50;
+}
+
+h1 { font-size: 20px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 12px; }
+
+/* Details/Summary elements */
+details {
+  page-break-inside: avoid;
+}
+
+/* Print-specific optimizations */
+@media print {
+  /* All diagrams get even more aggressive scaling in print */
+  .mermaid svg {
+    transform: scale(0.55) !important;
+    max-height: 80vh !important;
+  }
+  
+  /* Ensure diagrams don't exceed page bounds */
+  .mermaid {
+    max-height: 85vh;
+    overflow: hidden;
+    page-break-inside: avoid;
+  }
+  
+  /* Reduce margins for more space */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Extra scaling for very complex diagrams */
+  .mermaid svg g {
+    transform-origin: top center;
+  }
+  
+  /* Force page breaks before diagrams to ensure they start on new pages */
+  .mermaid {
+    page-break-before: auto;
+    page-break-after: avoid;
+  }
+  
+  /* Failsafe: If any diagram is still too large, scale it down further */
+  .mermaid svg {
+    min-width: unset !important;
+    min-height: unset !important;
+  }
+  
+  /* Emergency scaling for diagrams that are extremely large */
+  .mermaid:has(svg[viewBox*="0 0 2"]),
+  .mermaid:has(svg[viewBox*="0 0 3"]),
+  .mermaid:has(svg[width*="2"]),
+  .mermaid:has(svg[width*="3"]) {
+    transform: scale(0.35) !important;
+    transform-origin: top center;
+    margin-bottom: 20px;
+  }
+}
+
+/* Landscape orientation for extra wide diagrams */
+.mermaid.landscape {
+  page-break-before: always;
+  page-break-after: always;
+  margin: 0;
+  padding: 0;
+}
+
+/* Force landscape page for specific diagrams */
+.mermaid.landscape::before {
+  content: "";
+  display: block;
+  page-break-before: always;
+}
+
+@media print {
+  /* Landscape diagrams get special treatment */
+  .mermaid.landscape {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .mermaid.landscape svg {
+    transform: scale(0.9) !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* Landscape page orientation */
+@page landscape {
+  size: A4 landscape;
+  margin: 1cm;
+}
+
+/* Apply landscape page to landscape diagrams */
+.mermaid.landscape {
+  page: landscape;
+}
